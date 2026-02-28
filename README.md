@@ -282,3 +282,44 @@ Example: `python manage.py migrate`
 
 ---
 
+### Database API
+
+Database API can be accessed by opening the shell, one that's associated with Django. To do so, execute the following in terminal:
+
+```shell
+python manage.py shell
+```
+
+For rest, please refer to "Playing with the API" section on this page - https://docs.djangoproject.com/en/6.0/intro/tutorial02/
+
+### Superuser
+
+To login to the admin site, we need a superuser. To create one, execute this in terminal:
+
+```shell
+python manage.py createsuperuser
+```
+
+Enter your desired username and press enter.
+
+```shell
+Username: admin
+```
+
+You will then be prompted for your desired email address:
+
+```shell
+Email address: admin@example.com
+```
+
+The final step is to enter your password. You will be asked to enter your password twice, the second time as a confirmation of the first.
+
+```shell
+Password: **********
+Password (again): *********
+Superuser created successfully.
+```
+
+Spin up the server and head over to `http://127.0.0.1:8000/admin/` and login with the credentials you just created.
+
+But you will notice that polls app isn't there. To fix this, we need to go into `admin.py` inside `polls/` and register our models there.
