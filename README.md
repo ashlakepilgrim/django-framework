@@ -160,3 +160,125 @@ Common uses:
 
 Mental model:
 Request → middleware chain → view → middleware chain → response
+
+### Models, Databases and Migrations
+
+By default, Django uses SQLite.
+
+Config for database can be found within `mysite/settings.py`:
+
+```python
+# Database
+# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+```
+
+For configuring any other database - https://docs.djangoproject.com/en/6.0/topics/install/#database-installation
+
+Some applications make use of atleast one database table, so we need to create the tables before we can use them.
+For that, execute this in terminal:
+
+```shell
+python manage.py migrate
+```
+
+The `migrate` command looks at the INSTALLED_APPS setting and creates any necessary database tables according to the database settings in your mysite/settings.py file and the database migrations shipped with the app.
+
+#### Creating Models
+
+Django web framework includes a powerful, built-in Object-Relational Mapping (ORM) layer by default. This makes communicating with DB easier.
+
+A model is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you’re storing. Django follows the DRY Principle. The goal is to define your data model in one place and automatically derive things from it.
+
+This includes the migrations - unlike in Ruby On Rails, for example, migrations are entirely derived from your models file, and are essentially a history that Django can roll through to update your database schema to match your current models.
+
+```python
+from django.db import models
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField("date published")
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+```
+
+To activate this model, we need to include the polls app in `INSTALLED_APPS` in `mysite/settings.py`.
+
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'polls.apps.PollsConfig'
+]
+```
+
+Now Django knows to include the polls app. So, now, execute this:
+
+```shell
+python manage.py makemigrations polls
+```
+
+output:
+```shell
+Migrations for 'polls':
+  polls\migrations\0001_initial.py
+    + Create model Question
+    + Create model Choice
+```
+
+Now, run `migrate` again to create those model tables in your database:
+
+```shell
+python manage.py migrate
+```
+
+output:
+```shell
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, polls, sessions
+Running migrations:
+  Applying polls.0001_initial... OK
+```
+
+---
+
+Note: *makemigrations vs migrate*
+
+`makemigrations` - creates migration files from model changes
+- Django looks at your models.py
+- Detects what changed (new field, removed field, altered type, etc.)
+- Writes a migration file inside your app’s migrations/ folder
+- Does NOT touch the database yet
+
+Example: `python manage.py makemigrations`
+
+You’ll see something like:
+
+```shell
+Migrations for 'blog':
+  blog/migrations/0003_add_author.py
+```
+
+`migrate` - applies migration files to the database
+
+- Reads migration files (existing + newly created)
+- Executes SQL to update the database schema
+- Actually creates/changes tables and columns
+
+Example: `python manage.py migrate`
+
+---
+
