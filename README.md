@@ -84,3 +84,9 @@ For more information on production servers see: https://docs.djangoproject.com/e
 Don't worry about migrations and warnings as we will cover them later.
 
 As for the server, it's written in Python, so it might come handy for development but it's not optimal for production as compared to Apache or Nginx.
+
+### Projects vs Apps
+
+Official documentation states...
+
+An app is a web application that does something – e.g., a blog system, a database of public records or a small poll app. A project is a collection of configuration and apps for a particular website. A project can contain multiple apps. An app can be in multiple projects.
