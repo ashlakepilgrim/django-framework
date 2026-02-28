@@ -52,3 +52,35 @@ Now, the django project directory structure:
 - `mysite/wsgi.py`: for synchronous configuration
 
 Alongwith, `mysite` directory, there could be more folders which are referred to as `apps` in django project.
+
+### Spinning Up The Server
+
+To start the server, simply head over to the root directory inside which `manage.py` is located.
+Open a terminal and execute this:
+
+```shell
+python manage.py runserver
+```
+
+Which will output this:
+
+```shell
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+February 28, 2026 - 09:53:34
+Django version 6.0.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+```
+
+Don't worry about migrations and warnings as we will cover them later.
+
+As for the server, it's written in Python, so it might come handy for development but it's not optimal for production as compared to Apache or Nginx.
