@@ -327,3 +327,11 @@ But you will notice that polls app isn't there. To fix this, we need to go into 
 ### Views, Templates & 404 Error
 
 Refer the 3rd Page of Tutorial in Official Django Documentation - https://docs.djangoproject.com/en/6.0/intro/tutorial03/
+
+---
+
+Continue from https://docs.djangoproject.com/en/6.0/intro/tutorial04/ if you want to explore more of Django. Since, I'm more interested in DRF i.e. Django Rest Framework, I'll be picking up that.
+
+References:
+1. https://docs.djangoproject.com/en/6.0/
+2. https://www.youtube.com/playlist?list=PL-2EBeDYMIbQaapZunsYsll5MphTRL1qB
