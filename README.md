@@ -330,7 +330,80 @@ Refer the 3rd Page of Tutorial in Official Django Documentation - https://docs.d
 
 ---
 
-Continue from https://docs.djangoproject.com/en/6.0/intro/tutorial04/ if you want to explore more of Django. Since, I'm more interested in DRF i.e. Django Rest Framework, I'll be picking up that.
+Continue from https://docs.djangoproject.com/en/6.0/intro/tutorial04/ if you want to explore more of Django. Since, I'm more interested in DRF i.e. Django Rest Framework, I'll be picking up that. But before that, I'll try to build raw JSON APIs using the Django framework.
+
+### Building Raw JSON APIs with Django
+
+Before using frameworks like Django REST Framework (DRF), it is helpful to understand how APIs work using plain Django. In this project, the API responses are constructed manually using Django's built-in tools.
+
+The general flow looks like this:
+
+```
+Database → Django ORM → Python Objects → Serialization → JSON Response
+```
+
+1. **Database**
+   Data is stored in relational tables defined through Django models.
+
+2. **Django ORM**
+   The ORM retrieves records as Python objects using queries like:
+
+```python
+books = Book.objects.all()
+```
+
+3. **Serialization (Manual)**
+   Django model instances are converted into Python dictionaries so they can be sent as JSON.
+
+```python
+data = [
+    {
+        "id": b.id,
+        "title": b.title,
+        "author": b.author,
+        "genre": b.genre,
+        "published_year": b.published_year,
+        "rating": b.rating,
+        "available": b.available
+    }
+    for b in books
+]
+```
+
+4. **JSON Response**
+   Django's `JsonResponse` class converts the Python dictionary or list into JSON and returns it to the client.
+
+```python
+return JsonResponse(data, safe=False)
+```
+
+### Why This Matters
+
+Building APIs this way helps understand the underlying mechanics of web APIs before introducing abstractions like Django REST Framework.
+
+Concepts learned from raw Django APIs include:
+
+* Querying data using the Django ORM
+* Handling query parameters from requests
+* Filtering and ordering database results
+* Manually serializing model data
+* Returning JSON responses to clients
+* Implementing basic validation and error handling
+
+These fundamentals make it easier to understand higher-level API frameworks later.
+
+### Limitations of Raw Django APIs
+
+While this approach works well for learning and small APIs, it becomes repetitive as applications grow. Developers often need to repeatedly write:
+
+* Serialization logic
+* Validation logic
+* Error handling
+* Pagination
+* Filtering
+* Authentication
+
+Frameworks like Django REST Framework solve these problems by providing built-in tools such as serializers, generic views, and routers.
 
 References:
 1. https://docs.djangoproject.com/en/6.0/

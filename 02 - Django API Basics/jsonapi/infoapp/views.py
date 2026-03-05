@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.db.models import Q
 from .models import Book, Movie, Anime
 
 # Create your views here.
@@ -15,23 +16,105 @@ def index(request):
     }
     return JsonResponse(data)
 
+# def books(request):
+#     # pass
+#     books = Book.objects.all()
+#     data = [
+#         {
+#             "id": b.id,
+#             "title": b.title,
+#             "author": b.author,
+#             "genre": b.genre,
+#             "published_year": b.published_year,
+#             "rating": b.rating,
+#             "available": b.available
+#         }
+#         for b in books
+#     ]
+#     return JsonResponse(data, safe=False)
+
 def books(request):
-    books = Book.objects.all()
-    data = [
-        {
-            "id": b.id,
-            "title": b.title,
-            "author": b.author,
-            "genre": b.genre,
-            "published_year": b.published_year,
-            "rating": b.rating,
-            "available": b.available
+
+    try:
+        # If no query params, fetch all books and return them
+        books = Book.objects.all()
+
+        # If query params, extract them and then proceed
+        available = request.GET.get("available")
+        order = request.GET.get("order")
+        rating = request.GET.get("rating")
+
+        if available is not None:
+            if available.lower() == "true":
+                # books = Book.objects.filter(available=True)
+                # if multiple filters are there then it's better to filter from existing queryset
+                books = books.filter(available=True)
+            elif available.lower() == "false":
+                books = books.filter(available=False)
+            else:
+                return JsonResponse({
+                    "status": 400,
+                    "error": 'query param available value must be either true or false'
+                }, status=400)
+        
+        if order is not None:
+            if order.lower() == "asc":
+                books = books.order_by("title")
+            elif order.lower() == "desc":
+                books = books.order_by("-title")
+            else:
+                return JsonResponse({
+                    "status": 400,
+                    "error": 'query param order value must be either asc or desc'
+                }, status=400)
+            
+        if rating is not None:
+            try:
+                clean_rating = float(rating)
+
+                if not (0 <= clean_rating <= 5):
+                    return JsonResponse({
+                        "status": 400,
+                        "error": 'rating must be between 0 and 5'
+                    }, status=400)
+                
+                # __gte is a field lookup that stands for greater than or equal to
+                books = books.filter(rating__gte=clean_rating)
+            except ValueError:
+                return JsonResponse({
+                    "status": 400,
+                    "error": "rating must be a number"
+                }, status=400)
+
+        data = [
+            {
+                "id": b.id,
+                "title": b.title,
+                "author": b.author,
+                "genre": b.genre,
+                "published_year": b.published_year,
+                "rating": b.rating,
+                "available": b.available
+            }
+            for b in books
+        ]
+
+        response = {
+            "status": 200,
+            "data": data
         }
-        for b in books
-    ]
-    return JsonResponse(data, safe=False)
+
+        return JsonResponse(response, status=200)
+    
+    except Exception as e:
+
+        return JsonResponse({
+            "status": 500,
+            "error": str(e)
+        }, status=500)
 
 def movies(request):
+    # pass
     movies = Movie.objects.all()
     data = [
         {
@@ -48,6 +131,7 @@ def movies(request):
     return JsonResponse(data, safe=False)
 
 def animes(request):
+    # pass
     animes = Anime.objects.all()
     data = [
         {
@@ -63,6 +147,49 @@ def animes(request):
         for a in animes
     ]
     return JsonResponse(data, safe=False)
+
+def book_details(request, id):
+    # pass
+    book = get_object_or_404(Book, pk=id)
+    data = {
+        "id": book.id,
+        "title": book.title,
+        "author": book.author,
+        "genre": book.genre,
+        "published_year": book.published_year,
+        "rating": book.rating,
+        "available": book.available
+    }
+    return JsonResponse(data)
+
+def movie_details(request, id):
+    # pass
+    movie = get_object_or_404(Movie, pk=id)
+    data = {
+        "id": movie.id,
+        "title": movie.title,
+        "director": movie.director,
+        "genre": movie.genre,
+        "release_year": movie.release_year,
+        "rating": movie.rating,
+        "available": movie.available
+    }
+    return JsonResponse(data)
+
+def anime_details(request, id):
+    # pass
+    anime = get_object_or_404(Anime, pk=id)
+    data = {
+        "id": anime.id,
+        "title": anime.title,
+        "studio": anime.studio,
+        "genre": anime.genre,
+        "release_year": anime.release_year,
+        "rating": anime.rating,
+        "episodes": anime.episodes,
+        "completed": anime.completed
+    }
+    return JsonResponse(data)
 
 # OLD VIEWS
 
