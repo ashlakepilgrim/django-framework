@@ -405,6 +405,92 @@ While this approach works well for learning and small APIs, it becomes repetitiv
 
 Frameworks like Django REST Framework solve these problems by providing built-in tools such as serializers, generic views, and routers.
 
+### Django Rest Framework
+
+DRF introduces several abstractions that can initially feel complex but they significantly reduce boilerplate when building larger APIs.
+
+`serializers.py`
+
+```python
+from rest_framework import serializers
+from .models import Book
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = "__all__"
+```
+
+`views.py`
+
+```python
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Book
+from .serializers import BookSerializer
+
+class BookList(APIView):
+
+    def get(self, request):
+        books = Book.objects.all()
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+```
+
+`urls.py`
+
+```python
+path("books/", BookList.as_view())
+```
+
+Now when you visit:
+
+```
+/books/
+```
+
+DRF will automatically:
+
+1. Fetch models
+2. Serialize them
+3. Convert to JSON
+4. Return a response
+
+### Django Ninja
+
+Django Ninja is inspired by FastAPI.
+
+`urls.py`
+
+```python
+from django.contrib import admin
+from django.urls import path
+from ninja import NinjaAPI
+
+api = NinjaAPI()
+
+
+@api.get("/add")
+def add(request, a: int, b: int):
+    return {"result": a + b}
+
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/", api.urls),
+]
+```
+
+### Django API Ecosystem
+
+| Tool         | Style                  | Complexity |
+| ------------ | ---------------------- | ---------- |
+| Django       | full web framework     | medium     |
+| DRF          | powerful API framework | high       |
+| Django Ninja | modern API layer       | low        |
+
 References:
 1. https://docs.djangoproject.com/en/6.0/
 2. https://www.youtube.com/playlist?list=PL-2EBeDYMIbQaapZunsYsll5MphTRL1qB
+3. https://www.django-rest-framework.org/
+4. https://django-ninja.dev/
