@@ -31,6 +31,14 @@ I think the serializers have too much responsibility. They handle serialization,
 As far as using Serializer's, the whole to_internal_value and to_representation thing takes awhile to get used to, and ideally you don't need to mess with that kind of thing but there are some places you have to mess with it like removing nulls for optional+non-nullable fields.
 ```
 
+Comment 3:
+
+```
+It's a lot of abstraction with a lot of benefit, as you mention. But, like you, I found it to be quite heavy weight. I end up just doing simple deserialization with django forms and rolling a serialization framework like you're describing (a to_json method). It works quite well.
+
+The biggest thing I disagree with DRF (or perhaps I don't understand... it's been a while) is how they tie deserialization, validation & serialization together. I personally prefer validation and serialization to be separate.
+```
+
 ### The 3 Things DRF Adds to Django
 
 When you were writing raw APIs with Django, you had to manually do:
