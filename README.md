@@ -407,6 +407,8 @@ Frameworks like Django REST Framework solve these problems by providing built-in
 
 ### Django Rest Framework
 
+_(Also covered [here](https://github.com/ashlakepilgrim/django-framework/tree/main/03%20-%20Django%20Rest%20Framework%20Intro))_
+
 DRF introduces several abstractions that can initially feel complex but they significantly reduce boilerplate when building larger APIs.
 
 `serializers.py`
